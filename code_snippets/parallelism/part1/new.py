@@ -9,15 +9,17 @@ from bs4 import BeatifulSoup
 main_url = 'https://talkpython.fm'
 episodes = 'https://talkpython.fm/episodes/all'
 
-def get_links(url):
+def get_episodes_links():
     audiolists = []
     with requests.get(url) as request:
         data = request.text
         soup = BeatifulSoup(data, 'lxml')
         links = soup.select('.table-hover a')
-    for link in links:
+    return links
 
-    return audiolists
+def get_audio_link(link):
+    with requests.get()
+
 
 def download_link(directory, link)
 def main():
