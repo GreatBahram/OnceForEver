@@ -1,36 +1,56 @@
 #!/usr/bin/env python3
+import logging
 import queue
-import time
 import threading
+import time
+from pathlib import Path
 
 import requests
-from bs4 import BeatifulSoup
+from bs4 import BeautifulSoup
+
+log = True # change it to False if you don't like the logging
 
 main_url = 'https://talkpython.fm'
-episodes = 'https://talkpython.fm/episodes/all'
 
-def get_episodes_links():
-    audiolists = []
+# config logger
+logging.basicConfig(level=logging.INFO, format='%(asctime)-12s - %(name)s - %(levelname)s - %(message)s', datefmt='%y/%m/%d %H-%M-%S')
+logger = logging.getLogger(__name__)
+if not log:
+    logger.propagate = False
+
+def get_episodes_links(url):
+    """ """
     with requests.get(url) as request:
         data = request.text
-        soup = BeatifulSoup(data, 'lxml')
-        links = soup.select('.table-hover a')
-    return links
+        soup = BeautifulSoup(data, 'lxml')
+        links = [main_url + link.attrs['href'] for link in soup.select('.table-hover a')]
+        return links
 
 def get_audio_link(link):
-    with requests.get()
+    """ return audio link from given link"""
+    with requests.get(link) as request:
+        data = request.text
+        soup = BeautifulSoup(data, 'lxml')
+        audio_link = soup.select_one('.subscribe-btn')
+        logger.info(f'Getting audio link for {Path(audio_link.attrs["href"]).name}...')
+        return main_url + audio_link.attrs['href']
 
+def download_link(directory, link):
+    """ download and save the audio """
+    logger.info(f'Downloaded {link}')
+    pass
 
-def download_link(directory, link)
 def main():
-    print('Start of program.')
-    threadlist = []
-    for number in range(1, 6):
-        thread = threading.Thread(target=worker, args=(number,))
-        threadlist.append(thread)
-        thread.start()
-    for item in threading.enumerate():
-        print(item.getName())
+    start_time = time.time()
+    logger.info('Start of program.')
+    episodes_url = main_url + '/episodes/all'
+    episodes_links = get_episodes_links(episodes_url)
+    audiolists = []
+    for episode_link in reversed(episodes_links):
+        audiolists.append(get_audio_link(episode_link))
+    logger.info('End of program.')
+    end_time = time.time()
+    print(f'Download links took {int(end_time - start_time)} seconds')
 
 if __name__ == '__main__':
     main()
