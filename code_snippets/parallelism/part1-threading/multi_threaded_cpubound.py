@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import threading
 import time
 
 COUNT = 85_000_000
@@ -12,7 +13,14 @@ if __name__ == '__main__':
 
     start_time = time.time()
 
-    countdown(COUNT)
+    thread1 = threading.Thread(target=countdown, args=(COUNT//2,))
+    thread2 = threading.Thread(target=countdown, args=(COUNT//2,))
+
+    thread1.start()
+    thread2.start()
+
+    thread1.join()
+    thread2.join()
 
     end_time = time.time()
 
