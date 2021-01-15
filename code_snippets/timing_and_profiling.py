@@ -27,3 +27,17 @@ def approach_3(x: List[int], w: List[int]) -> int:
     x, y = np.array(x), np.array(w)
 
     return np.dot(x, w)
+
+
+import time
+
+start_time = time.perf_counter()
+
+total = 0
+
+for _ in range(100_000_000):
+    total += 1
+
+elapsed_time = time.perf_counter() - start_time
+
+print("It took {:0.1f} seconds.".format(elapsed_time))
