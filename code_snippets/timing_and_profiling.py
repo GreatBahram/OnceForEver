@@ -20,14 +20,16 @@ def approach_2(x: List[int], w: List[int]) -> int:
     return sum(map(operator.mul, x, w))
 
 
+import numpy as np
+x, y = np.arange(1000), np.arange(1000)
+
 def approach_3(x: List[int], w: List[int]) -> int:
     """They say NumPy is fast!"""
-    import numpy as np
-
-    x, y = np.array(x), np.array(w)
 
     return np.dot(x, w)
 
+
+########################################################
 
 import time
 
@@ -41,3 +43,60 @@ for _ in range(100_000_000):
 elapsed_time = time.perf_counter() - start_time
 
 print("It took {:0.1f} seconds.".format(elapsed_time))
+
+########################################################
+
+import timeit
+setup = "import numpy as np"
+stmt = "np.sum(np.arange(1000))"
+timeit.timeit(stmt=stmt, setup=setup, number=1_000)
+timeit.timeit(stmt=stmt, setup=setup, number=10_000)
+# the return value is in seconds.
+
+########################################################
+
+topic = "timing and profiling"
+timeit.timeit("print(topic)", number=1)
+
+# Fix the problem using globals
+timeit.timeit("print(topic)", number=1, globals=globals())
+
+# Fix the problem using import statment
+timeit.timeit("print(topic)", setup="from __main__ import topic", number=1)
+
+########################################################
+
+import timeit 
+
+timeit.timeit("approach_1(large_a, large_b)", globals=globals(), number=10_000)
+timeit.timeit("approach_2(large_a, large_b)", globals=globals(), number=10_000)
+
+setup = """
+import numpy as np
+
+large_a, large_b = np.arange(1000), np.arange(1000)
+
+from __main__ import approach_3
+"""
+
+timeit.timeit("approach_3(large_a, large_b)", setup=setup, number=10_000)
+
+########################################################
+
+%timeit approach_1(large_a, large_b)
+
+%timeit approach_2(large_a, large_b)
+
+import numpy as np
+
+large_a, large_b = np.arange(1000), np.arange(1000)
+
+
+def approach_3(x: List[int], w: List[int]) -> int:
+    """They say NumPy is fast!"""
+    return np.dot(x, w)
+
+%timeit approach_3(large_a, large_b)
+
+########################################################
+
