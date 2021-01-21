@@ -21,7 +21,7 @@ def approach_2(x: List[int], w: List[int]) -> int:
 
 
 import numpy as np
-x, y = np.arange(1000), np.arange(1000)
+large_a, large_b = np.arange(1000), np.arange(1000)
 
 def approach_3(x: List[int], w: List[int]) -> int:
     """They say NumPy is fast!"""
@@ -99,4 +99,29 @@ def approach_3(x: List[int], w: List[int]) -> int:
 %timeit approach_3(large_a, large_b)
 
 ########################################################
+
+import time
+
+
+def an_expensive_function(times: int):
+    time.sleep(times)
+
+
+def main():
+    print("Start")
+    an_expensive_function(1)
+    an_expensive_function(3)
+    an_expensive_function(1)
+    print("End")
+
+
+if __name__ == "__main__":
+    main()
+
+
+python3 -m cProfile -o output.prof profile_this.py
+
+pip install snakeviz
+
+snakeviz output.prof
 
